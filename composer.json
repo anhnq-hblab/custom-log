@@ -1,0 +1,28 @@
+{
+    "name": "anhnq/custom-log",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AnhNQ"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "laravel/framework": "^8.0|^9.0|^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AnhNQ\\CustomLogger\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AnhNQ\\CustomLogger\\CustomLoggerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
