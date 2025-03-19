@@ -59,7 +59,6 @@ git clone https://github.com/anhnq-hblab/custom-log.git CustomLogger
         "type": "path",
         "url": "packages/AnhNQ/CustomLogger"
     }
-
 ]
 ```
 

@@ -5,6 +5,7 @@ namespace AnhNQ\CustomLogger\Logging;
 use Monolog\Handler\AbstractProcessingHandler;
 use Illuminate\Http\Request;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class CustomLogHandler extends AbstractProcessingHandler
 {
@@ -19,13 +20,13 @@ class CustomLogHandler extends AbstractProcessingHandler
         $this->setFormatter(new CustomFormatter($this->request));
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!config('custom-logger.enabled', true) || $record['level'] < config('custom-logger.level', Logger::DEBUG)) {
             return;
         }
         $logFile = $this->getLogFilePath();
-        file_put_contents($logFile, $record['formatted'] . PHP_EOL, FILE_APPEND);
+        file_put_contents($logFile, $record->formatted . PHP_EOL, FILE_APPEND);
     }
 
     protected function getLogFilePath()

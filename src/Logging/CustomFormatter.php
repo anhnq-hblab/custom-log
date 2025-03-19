@@ -4,6 +4,7 @@ namespace AnhNQ\CustomLogger\Logging;
 
 use Monolog\Formatter\LineFormatter;
 use Illuminate\Http\Request;
+use Monolog\LogRecord;
 
 class CustomFormatter extends LineFormatter
 {
@@ -22,26 +23,26 @@ class CustomFormatter extends LineFormatter
         parent::__construct($output, $dateFormat, true, true);
     }
 
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         if ($this->isConsole) {
             $this->addConsoleContext($record);
         } else {
             $this->addRequestContext($record);
         }
-
-         // Handle exceptions
-         if (isset($record['context']['exception']) && $record['context']['exception'] instanceof \Throwable) {
-            $record['extra']['exception_class'] = get_class($record['context']['exception']);
-            $record['extra']['file'] = $record['context']['exception']->getFile();
-            $record['extra']['line'] = $record['context']['exception']->getLine();
-            // $record['extra']['trace'] = explode("\n", $record['context']['exception']->getTraceAsString());
+    
+        // Handle exceptions
+        if (isset($record->context['exception']) && $record->context['exception'] instanceof \Throwable) {
+            $record->extra['exception_class'] = $record->context['exception']::class;
+            $record->extra['file'] = $record->context['exception']->getFile();
+            $record->extra['line'] = $record->context['exception']->getLine();
+            // $record->extra['trace'] = explode("\n", $record->context['exception']->getTraceAsString());
         }
-
+    
         return parent::format($record);
     }
 
-    protected function addRequestContext(array &$record)
+    protected function addRequestContext(LogRecord &$record)
     {
         if (!$this->request) {
             return;
@@ -64,7 +65,7 @@ class CustomFormatter extends LineFormatter
         }
     }
 
-    protected function addConsoleContext(array &$record)
+    protected function addConsoleContext(LogRecord &$record)
     {
         $command = $_SERVER['argv'] ?? [];
         
